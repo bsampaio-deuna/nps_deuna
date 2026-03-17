@@ -41,10 +41,16 @@
       margin-bottom: -28px;
     }
     .hero-top {
-      display: flex; justify-content: space-between; align-items: center;
-      max-width: 660px; margin: 0 auto 24px;
+      position: relative;
+      max-width: 660px; margin: 0 auto 28px;
+      display: flex; justify-content: center; align-items: center;
     }
     .logo img { height: 32px; width: auto; display: block; }
+
+    /* lang switcher floats right without pushing logo off-center */
+    .lang-switcher {
+      position: absolute; right: 0; top: 50%; transform: translateY(-50%);
+    }
 
     /* ── LANGUAGE SWITCHER ── */
     .lang-switcher {
@@ -52,6 +58,7 @@
       background: #F0F0EE; border-radius: 99px;
       padding: 3px;
     }
+
     .lang-btn {
       border: none; background: transparent;
       font-family: 'Poppins', sans-serif;
