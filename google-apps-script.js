@@ -4,6 +4,7 @@
 
 const SHEET_NAME      = 'NPS Answers';
 const DASHBOARD_NAME  = 'Dashboard';
+const CHARTDATA_NAME  = 'ChartData';
 
 // ── Recebe respostas do formulário ──────────────────────────
 function doPost(e) {
@@ -71,6 +72,15 @@ function buildDashboard() {
   const ss       = SpreadsheetApp.getActiveSpreadsheet();
   const answers  = ss.getSheetByName(SHEET_NAME);
 
+  // Cria ou limpa a aba ChartData (dados dos gráficos)
+  let cd = ss.getSheetByName(CHARTDATA_NAME);
+  if (!cd) {
+    cd = ss.insertSheet(CHARTDATA_NAME);
+    ss.setActiveSheet(cd);
+  } else {
+    cd.clear();
+  }
+
   // Cria ou limpa a aba Dashboard
   let dash = ss.getSheetByName(DASHBOARD_NAME);
   if (!dash) {
@@ -85,12 +95,19 @@ function buildDashboard() {
 
   // Lê os dados
   const lastRow = answers.getLastRow();
-  if (lastRow <= 1) {
+
+  // Detecta se linha 1 é cabeçalho (texto) ou dado (número na col 3)
+  const firstCellCol3 = lastRow >= 1 ? answers.getRange(1, 3).getValue() : '';
+  const hasHeader = isNaN(Number(firstCellCol3)) || firstCellCol3 === '';
+  const answersDataStartRow = hasHeader ? 2 : 1;
+  const dataCount = lastRow - (hasHeader ? 1 : 0);
+
+  if (dataCount < 1) {
     dash.getRange('B2').setValue('Nenhuma resposta ainda.');
     return;
   }
 
-  const data = answers.getRange(2, 1, lastRow - 1, 11).getValues();
+  const data = answers.getRange(answersDataStartRow, 1, dataCount, 11).getValues();
 
   // Calcula métricas
   const total      = data.length;
@@ -194,60 +211,57 @@ function buildDashboard() {
 
   dash.setRowHeight(9, 20);
 
-  // ── TABELA DE DADOS PARA OS GRÁFICOS ─────────────────────
-  // Usamos uma área oculta para alimentar os gráficos
-  const dataStartRow = 40; // abaixo da área visível
-
-  // Dados distribuição NPS
-  dash.getRange(dataStartRow, 8).setValue('Nota');
-  dash.getRange(dataStartRow, 9).setValue('Respostas');
+  // ── TABELA DE DADOS PARA OS GRÁFICOS (aba ChartData) ────────
+  // Distribuição NPS (col A:B)
+  cd.getRange(1, 1).setValue('Nota');
+  cd.getRange(1, 2).setValue('Respostas');
   for (let i = 0; i <= 10; i++) {
-    dash.getRange(dataStartRow + 1 + i, 8).setValue(i);
-    dash.getRange(dataStartRow + 1 + i, 9).setValue(dist[i]);
+    cd.getRange(2 + i, 1).setValue(i);
+    cd.getRange(2 + i, 2).setValue(dist[i]);
   }
 
-  // Dados segmentação
-  dash.getRange(dataStartRow, 11).setValue('Categoria');
-  dash.getRange(dataStartRow, 12).setValue('Total');
-  dash.getRange(dataStartRow+1, 11).setValue('Promotores (9–10)');
-  dash.getRange(dataStartRow+1, 12).setValue(promotores);
-  dash.getRange(dataStartRow+2, 11).setValue('Neutros (7–8)');
-  dash.getRange(dataStartRow+2, 12).setValue(neutros);
-  dash.getRange(dataStartRow+3, 11).setValue('Detratores (0–6)');
-  dash.getRange(dataStartRow+3, 12).setValue(detratores);
+  // Segmentação (col D:E)
+  cd.getRange(1, 4).setValue('Categoria');
+  cd.getRange(1, 5).setValue('Total');
+  cd.getRange(2, 4).setValue('Promotores (9–10)');
+  cd.getRange(2, 5).setValue(promotores);
+  cd.getRange(3, 4).setValue('Neutros (7–8)');
+  cd.getRange(3, 5).setValue(neutros);
+  cd.getRange(4, 4).setValue('Detratores (0–6)');
+  cd.getRange(4, 5).setValue(detratores);
 
-  // Dados likert
-  const likertLabels = ['Concordo totalmente','Concordo','Discordo','Discordo totalmente'];
-  dash.getRange(dataStartRow, 14).setValue('Critério');
-  dash.getRange(dataStartRow, 15).setValue('Concordo totalmente');
-  dash.getRange(dataStartRow, 16).setValue('Concordo');
-  dash.getRange(dataStartRow, 17).setValue('Discordo');
-  dash.getRange(dataStartRow, 18).setValue('Discordo totalmente');
-  dash.getRange(dataStartRow+1, 14).setValue('Suporte Técnico');
-  dash.getRange(dataStartRow+2, 14).setValue('Comunicação');
-  dash.getRange(dataStartRow+3, 14).setValue('Resultados');
+  // Likert (col G:K)
+  cd.getRange(1, 7).setValue('Critério');
+  cd.getRange(1, 8).setValue('Concordo totalmente');
+  cd.getRange(1, 9).setValue('Concordo');
+  cd.getRange(1, 10).setValue('Discordo');
+  cd.getRange(1, 11).setValue('Discordo totalmente');
+  cd.getRange(2, 7).setValue('Suporte Técnico');
+  cd.getRange(3, 7).setValue('Comunicação');
+  cd.getRange(4, 7).setValue('Resultados');
   [suporte, comunicacao, resultados].forEach((arr, i) => {
-    arr.forEach((v, j) => dash.getRange(dataStartRow+1+i, 15+j).setValue(v));
+    arr.forEach((v, j) => cd.getRange(2 + i, 8 + j).setValue(v));
   });
 
-  // Dados aspectos (top 8)
-  dash.getRange(dataStartRow, 20).setValue('Aspecto');
-  dash.getRange(dataStartRow, 21).setValue('Menções');
-  aspectos.slice(0,8).forEach((a,i) => {
-    dash.getRange(dataStartRow+1+i, 20).setValue(a[0]);
-    dash.getRange(dataStartRow+1+i, 21).setValue(a[1]);
+  // Aspectos (col M:N)
+  cd.getRange(1, 13).setValue('Aspecto');
+  cd.getRange(1, 14).setValue('Menções');
+  aspectos.slice(0, 8).forEach((a, i) => {
+    cd.getRange(2 + i, 13).setValue(a[0]);
+    cd.getRange(2 + i, 14).setValue(a[1]);
   });
+
+  // Confirma todos os dados antes de criar os gráficos
+  SpreadsheetApp.flush();
 
   // ── GRÁFICOS ─────────────────────────────────────────────
 
   // 1. Gráfico distribuição NPS (barras)
-  const distData = dash.getRange(dataStartRow, 8, 12, 2);
+  const distData = cd.getRange(1, 1, 12, 2);
   const chartDist = dash.newChart()
     .setChartType(Charts.ChartType.COLUMN)
     .addRange(distData)
     .setPosition(10, 2, 0, 0)
-    .setNumRows(16)
-    .setNumColumns(3)
     .setOption('title', 'Distribuição de Notas NPS')
     .setOption('legend', { position: 'none' })
     .setOption('colors', ['#FF5500'])
@@ -258,13 +272,11 @@ function buildDashboard() {
   dash.insertChart(chartDist);
 
   // 2. Gráfico segmentação (rosca)
-  const segData = dash.getRange(dataStartRow, 11, 4, 2);
+  const segData = cd.getRange(1, 4, 4, 2);
   const chartSeg = dash.newChart()
     .setChartType(Charts.ChartType.PIE)
     .addRange(segData)
     .setPosition(10, 4, 0, 0)
-    .setNumRows(16)
-    .setNumColumns(2)
     .setOption('title', 'Promotores · Neutros · Detratores')
     .setOption('pieHole', 0.5)
     .setOption('colors', ['#0B9595','#FFB84D','#FF614B'])
@@ -273,13 +285,11 @@ function buildDashboard() {
   dash.insertChart(chartSeg);
 
   // 3. Likert comparativo (barras empilhadas)
-  const likertData = dash.getRange(dataStartRow, 14, 4, 5);
+  const likertData = cd.getRange(1, 7, 4, 5);
   const chartLikert = dash.newChart()
     .setChartType(Charts.ChartType.BAR)
     .addRange(likertData)
     .setPosition(26, 2, 0, 0)
-    .setNumRows(10)
-    .setNumColumns(4)
     .setOption('title', 'Avaliações por Critério')
     .setOption('isStacked', true)
     .setOption('colors', ['#0B9595','#76B4E8','#FFB84D','#FF614B'])
@@ -288,13 +298,12 @@ function buildDashboard() {
   dash.insertChart(chartLikert);
 
   // 4. Aspectos mais valorizados (barras horizontais)
-  const aspData = dash.getRange(dataStartRow, 20, Math.min(aspectos.length,8)+1, 2);
+  const nAsp = Math.min(aspectos.length, 8) + 1;
+  const aspData = cd.getRange(1, 13, nAsp, 2);
   const chartAsp = dash.newChart()
     .setChartType(Charts.ChartType.BAR)
     .addRange(aspData)
     .setPosition(26, 4, 0, 0)
-    .setNumRows(10)
-    .setNumColumns(2)
     .setOption('title', 'O que os Parceiros Mais Valorizam')
     .setOption('legend', { position: 'none' })
     .setOption('colors', ['#FF5500'])
@@ -302,8 +311,8 @@ function buildDashboard() {
     .build();
   dash.insertChart(chartAsp);
 
-  // Esconde as linhas de dados auxiliares
-  dash.hideRows(dataStartRow, 15);
+  // Oculta a aba ChartData
+  cd.hideSheet();
 
   SpreadsheetApp.flush();
 }
