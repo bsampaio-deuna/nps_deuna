@@ -341,6 +341,27 @@ def avg_num(series):
     return round(nums.mean(), 1) if len(nums) else 0
 
 # ── Sidebar ───────────────────────────────────────────────────
+# ── Password gate ────────────────────────────────────────────
+if "authenticated" not in st.session_state:
+    st.session_state.authenticated = False
+
+if not st.session_state.authenticated:
+    col_c = st.columns([1, 2, 1])[1]
+    with col_c:
+        st.markdown("<br><br>", unsafe_allow_html=True)
+        st.image(LOGO_PATH, width=140)
+        st.markdown("<br>", unsafe_allow_html=True)
+        st.markdown(f"<h2 style='color:{DARK};font-weight:800;margin-bottom:4px'>NPS Dashboard</h2>", unsafe_allow_html=True)
+        st.markdown("<p style='color:#888;margin-bottom:24px'>Deuna Partnerships</p>", unsafe_allow_html=True)
+        pwd = st.text_input("Password", type="password", placeholder="Enter password")
+        if st.button("Enter", use_container_width=True):
+            if pwd == "deuna2025":
+                st.session_state.authenticated = True
+                st.rerun()
+            else:
+                st.error("Incorrect password.")
+    st.stop()
+
 with st.sidebar:
     st.image(LOGO_PATH, width=120)
     st.markdown("<br>", unsafe_allow_html=True)
