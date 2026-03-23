@@ -1,6 +1,14 @@
 // ─────────────────────────────────────────────────────────────
 // DEUNA NPS — Google Apps Script
 // ─────────────────────────────────────────────────────────────
+//
+// SETUP (rodar uma vez após publicar):
+//   1. Abra o editor do Apps Script → Execute → setupTriggers()
+//   2. Autorize as permissões solicitadas
+//   Isso cria:
+//     • Trigger de edição → reconstrói dashboard ao editar NPS Answers
+//     • Trigger diário → rebuild automático todo dia às 8h (backup)
+// ─────────────────────────────────────────────────────────────
 
 const SHEET_NAME     = 'NPS Answers';
 const DASHBOARD_NAME = 'Dashboard';
@@ -25,10 +33,11 @@ const COLS = {
   integRapidez:15,
   integQual:   16,
   integFacil:  17,
-  aspectos:    18,
-  melhoria:    19,
+  aspectos:      18,
+  melhoria:      19,
+  valorAgregado: 20,
 };
-const TOTAL_COLS = 19;
+const TOTAL_COLS = 20;
 
 const HEADER = [
   'Data/Hora', 'Empresa', 'Nome', 'E-mail',
@@ -39,6 +48,7 @@ const HEADER = [
   'Resultados (1–10)',
   'Integração — Rapidez', 'Integração — Qualidade', 'Integração — Facilidade',
   'Aspectos Valorizados', 'Sugestões de Melhoria',
+  'Clareza Valor Agregado (1–10)',
 ];
 
 // ── Recebe respostas do formulário ──────────────────────────
@@ -80,7 +90,8 @@ function doPost(e) {
       Number(data.integ_qual)   || '',
       Number(data.integ_facil)  || '',
       (data.aspectos || []).join(', '),
-      data.melhoria      || '',
+      data.melhoria           || '',
+      Number(data.valor_agregado) || '',
     ]);
 
     buildDashboard();
@@ -152,8 +163,8 @@ function buildDashboard() {
 
   // Lê os dados
   const lastRow = answers.getLastRow();
-  const firstCellCol5 = lastRow >= 1 ? answers.getRange(1, COLS.nps).getValue() : '';
-  const hasHeader = isNaN(Number(firstCellCol5)) || firstCellCol5 === '';
+  const firstCell = lastRow >= 1 ? answers.getRange(1, 1).getValue() : '';
+  const hasHeader = !(firstCell instanceof Date);
   const dataStartRow = hasHeader ? 2 : 1;
   const dataCount = lastRow - (hasHeader ? 1 : 0);
 
@@ -175,7 +186,8 @@ function buildDashboard() {
   const iIntegRap    = COLS.integRapidez - 1; // 14
   const iIntegQual   = COLS.integQual - 1;    // 15
   const iIntegFacil  = COLS.integFacil - 1;   // 16
-  const iAspectos    = COLS.aspectos - 1;     // 17
+  const iAspectos      = COLS.aspectos - 1;       // 17
+  const iValorAgregado = COLS.valorAgregado - 1;  // 19
 
   // Métricas NPS
   const total      = data.length;
@@ -197,7 +209,8 @@ function buildDashboard() {
   const avgResultados  = avg(data.map(r => Number(r[iResultados])));
   const avgIntegRap    = avg(data.map(r => Number(r[iIntegRap])));
   const avgIntegQual   = avg(data.map(r => Number(r[iIntegQual])));
-  const avgIntegFacil  = avg(data.map(r => Number(r[iIntegFacil])));
+  const avgIntegFacil    = avg(data.map(r => Number(r[iIntegFacil])));
+  const avgValorAgregado = avg(data.map(r => Number(r[iValorAgregado])));
 
   // Carinhas comunicação técnica (good=10, neutral=5, bad=1)
   const avgComtecVel   = faceScore(data, iComtecVel);
@@ -265,27 +278,35 @@ function buildDashboard() {
   lblRow11.setValue('Médias — Réguas (escala 1–10)');
   lblRow11.setFontSize(10).setFontWeight('bold').setFontColor('#8E8E8E').setFontFamily('Arial');
 
-  styleCard(dash, 12, 2, 'Resultados da Parceria', avgResultados, '#F0F4FF', '#3B5BDB');
-  styleCard(dash, 12, 3, 'Integração — Rapidez',   avgIntegRap,    '#F0F4FF', '#3B5BDB');
-  styleCard(dash, 12, 4, 'Integração — Qualidade',  avgIntegQual,   '#F0F4FF', '#3B5BDB');
-  styleCard(dash, 12, 5, 'Integração — Facilidade', avgIntegFacil,  '#F0F4FF', '#3B5BDB');
+  // Row 1: Resultados, Valor Agregado, Integ Rapidez, Integ Qualidade
+  styleCard(dash, 12, 2, 'Resultados da Parceria',  avgResultados,    '#F0F4FF', '#3B5BDB');
+  styleCard(dash, 12, 3, 'Clareza Valor Agregado',  avgValorAgregado, '#F0F4FF', '#3B5BDB');
+  styleCard(dash, 12, 4, 'Integração — Rapidez',    avgIntegRap,      '#F0F4FF', '#3B5BDB');
+  styleCard(dash, 12, 5, 'Integração — Qualidade',  avgIntegQual,     '#F0F4FF', '#3B5BDB');
+
+  // Row 2: Integ Facilidade (isolada)
+  dash.setRowHeight(16, 12);
+  dash.setRowHeight(17, 24);
+  dash.setRowHeight(18, 48);
+  dash.setRowHeight(19, 28);
+  styleCard(dash, 17, 2, 'Integração — Facilidade', avgIntegFacil,    '#F0F4FF', '#3B5BDB');
 
   // ── Cards comunicação técnica (carinhas) ──
-  dash.setRowHeight(16, 12);
-  dash.setRowHeight(17, 20);
-  dash.setRowHeight(18, 24);
-  dash.setRowHeight(19, 48);
-  dash.setRowHeight(20, 28);
-  dash.setRowHeight(21, 16);
+  dash.setRowHeight(20, 12);
+  dash.setRowHeight(21, 20);
+  dash.setRowHeight(22, 24);
+  dash.setRowHeight(23, 48);
+  dash.setRowHeight(24, 28);
+  dash.setRowHeight(25, 16);
 
-  const lblRow17 = dash.getRange('B17:E17');
-  lblRow17.merge();
-  lblRow17.setValue('Comunicação Técnica — Score médio (good=10 · neutral=5 · bad=1)');
-  lblRow17.setFontSize(10).setFontWeight('bold').setFontColor('#8E8E8E').setFontFamily('Arial');
+  const lblRow21 = dash.getRange('B21:E21');
+  lblRow21.merge();
+  lblRow21.setValue('Comunicação Técnica — Score médio (good=10 · neutral=5 · bad=1)');
+  lblRow21.setFontSize(10).setFontWeight('bold').setFontColor('#8E8E8E').setFontFamily('Arial');
 
-  styleCard(dash, 18, 2, '⚡ Velocidade',   avgComtecVel,   '#FFF8EC', '#B45309');
-  styleCard(dash, 18, 3, '✅ Qualidade',    avgComtecQual,  '#FFF8EC', '#B45309');
-  styleCard(dash, 18, 4, '📣 Proatividade', avgComtecProat, '#FFF8EC', '#B45309');
+  styleCard(dash, 22, 2, '⚡ Velocidade',   avgComtecVel,   '#FFF8EC', '#B45309');
+  styleCard(dash, 22, 3, '✅ Qualidade',    avgComtecQual,  '#FFF8EC', '#B45309');
+  styleCard(dash, 22, 4, '📣 Proatividade', avgComtecProat, '#FFF8EC', '#B45309');
 
   // ── CHARTDATA ────────────────────────────────────────────────
 
@@ -329,6 +350,7 @@ function buildDashboard() {
   cd.getRange(1, 17).setValue('Média');
   const sliderDims = [
     ['Resultados', avgResultados],
+    ['Clareza Valor Agregado', avgValorAgregado],
     ['Integração — Rapidez', avgIntegRap],
     ['Integração — Qualidade', avgIntegQual],
     ['Integração — Facilidade', avgIntegFacil],
@@ -370,7 +392,7 @@ function buildDashboard() {
   dash.insertChart(dash.newChart()
     .setChartType(Charts.ChartType.BAR)
     .addRange(cd.getRange(1, 7, 3, 5))
-    .setPosition(38, 2, 0, 0)
+    .setPosition(42, 2, 0, 0)
     .setOption('title', 'Suporte e Comunicação da Equipe')
     .setOption('isStacked', true)
     .setOption('colors', ['#0B9595', '#76B4E8', '#FFB84D', '#FF614B'])
@@ -382,7 +404,7 @@ function buildDashboard() {
   dash.insertChart(dash.newChart()
     .setChartType(Charts.ChartType.BAR)
     .addRange(cd.getRange(1, 13, nAsp, 2))
-    .setPosition(38, 4, 0, 0)
+    .setPosition(42, 4, 0, 0)
     .setOption('title', 'O que os Parceiros Mais Valorizam')
     .setOption('legend', { position: 'none' })
     .setOption('colors', ['#FF5500'])
@@ -392,8 +414,8 @@ function buildDashboard() {
   // 5. Médias das réguas (barras)
   dash.insertChart(dash.newChart()
     .setChartType(Charts.ChartType.COLUMN)
-    .addRange(cd.getRange(1, 16, 5, 2))
-    .setPosition(54, 2, 0, 0)
+    .addRange(cd.getRange(1, 16, 6, 2))
+    .setPosition(58, 2, 0, 0)
     .setOption('title', 'Médias — Avaliações por Régua (1–10)')
     .setOption('legend', { position: 'none' })
     .setOption('colors', ['#3B5BDB'])
@@ -403,6 +425,59 @@ function buildDashboard() {
 
   cd.hideSheet();
   SpreadsheetApp.flush();
+}
+
+// ── Automação: triggers instaláveis ─────────────────────────
+
+/**
+ * Rodar UMA VEZ no editor do Apps Script.
+ * Cria trigger de edição e trigger diário de rebuild.
+ */
+function setupTriggers() {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+
+  // Remove triggers antigos para evitar duplicatas
+  ScriptApp.getProjectTriggers().forEach(t => {
+    const fn = t.getHandlerFunction();
+    if (fn === 'onNpsAnswersEdit' || fn === 'dailyRebuild') {
+      ScriptApp.deleteTrigger(t);
+    }
+  });
+
+  // Trigger de edição na planilha
+  ScriptApp.newTrigger('onNpsAnswersEdit')
+    .forSpreadsheet(ss)
+    .onEdit()
+    .create();
+
+  // Trigger diário às 8h (horário do projeto, America/Sao_Paulo)
+  ScriptApp.newTrigger('dailyRebuild')
+    .timeBased()
+    .atHour(8)
+    .everyDays(1)
+    .inTimezone('America/Sao_Paulo')
+    .create();
+
+  Logger.log('✅ Triggers criados: onNpsAnswersEdit + dailyRebuild (8h diário)');
+}
+
+/**
+ * Disparado automaticamente ao editar qualquer célula.
+ * Reconstrói o dashboard apenas se a aba editada for NPS Answers.
+ */
+function onNpsAnswersEdit(e) {
+  if (!e || !e.source) return;
+  const editedSheet = e.range.getSheet().getName();
+  if (editedSheet === SHEET_NAME) {
+    buildDashboard();
+  }
+}
+
+/**
+ * Rebuild diário às 8h — garante que o dashboard esteja sempre atualizado.
+ */
+function dailyRebuild() {
+  buildDashboard();
 }
 
 // ── Helper: estiliza card ────────────────────────────────────
