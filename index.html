@@ -278,6 +278,7 @@
       <div class="q-label" id="lbl-1"></div>
       <div class="q-hint"  id="hnt-1"></div>
       <input type="text" id="empresa" autocomplete="organization" />
+      <div class="err" id="err-empresa"></div>
     </div>
 
     <!-- 2 — Nome -->
@@ -289,13 +290,13 @@
       <input type="text" id="nome" autocomplete="name" />
     </div>
 
-    <!-- 3 — Cargo -->
+    <!-- 3 — Email -->
     <div class="step" data-step="3">
       <div class="divider"></div>
-      <div class="q-tag"   id="tag-cargo"></div>
-      <div class="q-label" id="lbl-cargo"></div>
-      <div class="q-hint"  id="hnt-cargo"></div>
-      <input type="text" id="cargo" autocomplete="organization-title" />
+      <div class="q-tag"   id="tag-email"></div>
+      <div class="q-label" id="lbl-email"></div>
+      <div class="q-hint"  id="hnt-email"></div>
+      <input type="email" id="email" autocomplete="email" />
     </div>
 
     <!-- 4 — NPS -->
@@ -319,6 +320,7 @@
       <div class="q-label" id="cond-label"></div>
       <div class="q-hint"  id="cond-hint"></div>
       <textarea id="cond-resp"></textarea>
+      <div class="err" id="err-condresp"></div>
     </div>
 
     <!-- 6 — Support -->
@@ -393,6 +395,7 @@
       <div class="q-label" id="lbl-7"></div>
       <div class="q-hint"  id="hnt-7"></div>
       <div class="checks"  id="chks"></div>
+      <div class="err" id="err-chks"></div>
     </div>
 
     <!-- 11 — Open -->
@@ -402,6 +405,7 @@
       <div class="q-label" id="lbl-8"></div>
       <div class="q-hint"  id="hnt-8"></div>
       <textarea id="melhoria"></textarea>
+      <div class="err" id="err-melhoria"></div>
     </div>
 
     <!-- Thank you -->
@@ -438,12 +442,14 @@ const T = {
     placeholder: 'Escreva aqui...',
     errNps:      'Selecione uma nota para continuar.',
     errOpt:      'Selecione uma opção para continuar.',
+    errRequired: 'Este campo é obrigatório.',
+    errChks:     'Selecione ao menos uma opção para continuar.',
     tyTitle:     'Obrigada pelo seu feedback.',
     tyBody:      'Suas respostas vão direto para o time de parcerias da Deuna. Vamos analisar com cuidado e usar para fortalecer nossa relação.',
     likert:      ['Concordo totalmente','Concordo','Discordo','Discordo totalmente'],
     q1:  { lbl:'Qual é o nome da sua empresa?',                                                               hnt:'Nos ajuda a conectar seu feedback ao parceiro certo.',                              ph:'Nome da empresa' },
     qNome: { lbl:'Qual é o seu nome?',                                                                         hnt:'Para sabermos quem está nos dando este feedback.',                                  ph:'Seu nome' },
-    qCargo:{ lbl:'Qual é o seu cargo?',                                                                        hnt:'Nos ajuda a entender melhor o seu contexto.',                                       ph:'Seu cargo' },
+    qEmail:{ lbl:'Qual é o seu e-mail?',                                                                       hnt:'Opcional — caso queira que entremos em contato.',                                   ph:'seu@email.com' },
     q2:  { lbl:'Em uma escala de 0 a 10, qual a probabilidade de você recomendar a Deuna como parceira estratégica?', hnt:'0 = muito improvável · 10 = muito provável' },
     qComTec: { lbl:'Como você avalia a comunicação técnica?', hnt:'Avalie cada aspecto separadamente.', vel:'Velocidade', qual:'Qualidade', proat:'Proatividade', err:'Avalie todos os aspectos para continuar.' },
     q4:  { lbl:'O suporte técnico da Deuna tem sido ágil e eficaz',                                           hnt:'Tempo de resposta, qualidade das soluções e proatividade.' },
@@ -472,12 +478,14 @@ const T = {
     placeholder: 'Escribe aquí...',
     errNps:      'Selecciona una puntuación para continuar.',
     errOpt:      'Selecciona una opción para continuar.',
+    errRequired: 'Este campo es obligatorio.',
+    errChks:     'Selecciona al menos una opción para continuar.',
     tyTitle:     'Gracias por tu feedback.',
     tyBody:      'Tus respuestas van directo al equipo de alianzas de Deuna. Las analizaremos con cuidado para fortalecer nuestra relación.',
     likert:      ['Totalmente de acuerdo','De acuerdo','En desacuerdo','Totalmente en desacuerdo'],
     q1:  { lbl:'¿Cuál es el nombre de tu empresa?',                                                                    hnt:'Nos ayuda a conectar tu feedback con el socio correcto.',              ph:'Nombre de la empresa' },
     qNome: { lbl:'¿Cuál es tu nombre?',                                                                               hnt:'Para saber quién nos está dando este feedback.',                        ph:'Tu nombre' },
-    qCargo:{ lbl:'¿Cuál es tu cargo?',                                                                                hnt:'Nos ayuda a entender mejor tu contexto.',                               ph:'Tu cargo' },
+    qEmail:{ lbl:'¿Cuál es tu correo electrónico?',                                                                   hnt:'Opcional — por si quieres que nos pongamos en contacto.',               ph:'tu@email.com' },
     q2:  { lbl:'En una escala del 0 al 10, ¿qué tan probable es que recomiendes a Deuna como socio estratégico?',      hnt:'0 = muy improbable · 10 = muy probable' },
     qComTec: { lbl:'¿Cómo evalúas la comunicación técnica?', hnt:'Evalúa cada aspecto por separado.', vel:'Velocidad', qual:'Calidad', proat:'Proactividad', err:'Evalúa todos los aspectos para continuar.' },
     q4:  { lbl:'El soporte técnico de Deuna ha sido ágil y eficaz',                                                     hnt:'Tiempo de respuesta, calidad de las soluciones y proactividad.' },
@@ -506,12 +514,14 @@ const T = {
     placeholder: 'Write here...',
     errNps:      'Please select a score to continue.',
     errOpt:      'Please select an option to continue.',
+    errRequired: 'This field is required.',
+    errChks:     'Please select at least one option to continue.',
     tyTitle:     'Thank you for your feedback.',
     tyBody:      'Your answers go directly to the Deuna partnerships team. We will review them carefully to strengthen our relationship.',
     likert:      ['Strongly agree','Agree','Disagree','Strongly disagree'],
     q1:  { lbl:'What is your company name?',                                                                            hnt:'Helps us connect your feedback to the right partner.',              ph:'Company name' },
     qNome: { lbl:'What is your name?',                                                                                  hnt:'So we know who is giving us this feedback.',                         ph:'Your name' },
-    qCargo:{ lbl:'What is your job title?',                                                                             hnt:'Helps us better understand your context.',                           ph:'Your job title' },
+    qEmail:{ lbl:'What is your email?',                                                                                 hnt:'Optional — in case you\'d like us to follow up.',                    ph:'your@email.com' },
     q2:  { lbl:'On a scale of 0 to 10, how likely are you to recommend Deuna as a strategic partner?',                  hnt:'0 = very unlikely · 10 = very likely' },
     qComTec: { lbl:'How do you rate the technical communication?', hnt:'Rate each aspect separately.', vel:'Speed', qual:'Quality', proat:'Proactivity', err:'Please rate all aspects to continue.' },
     q4:  { lbl:'Deuna\'s technical support has been fast and effective',                                                 hnt:'Response time, quality of solutions, and proactiveness.' },
@@ -535,6 +545,14 @@ const TOTAL = 11;
 let step  = 1;
 let nps   = null;
 let lang  = 'pt';
+
+// ── Clear text-field errors on input ──
+['empresa', 'cond-resp', 'melhoria'].forEach(id => {
+  document.getElementById(id)?.addEventListener('input', () => {
+    const errId = id === 'cond-resp' ? 'err-condresp' : `err-${id}`;
+    document.getElementById(errId)?.classList.remove('show');
+  });
+});
 
 // ── Build NPS buttons (once) ──
 const grid = document.getElementById('nps-grid');
@@ -618,6 +636,7 @@ function setLang(l) {
   set('tag-1', `${t.question} 1 ${t.of} ${TOTAL}`);
   set('lbl-1', t.q1.lbl); set('hnt-1', t.q1.hnt);
   document.getElementById('empresa').placeholder = t.q1.ph;
+  set('err-empresa', t.errRequired);
 
   // Q2 — Nome
   set('tag-nome', `${t.question} 2 ${t.of} ${TOTAL}`);
@@ -625,9 +644,9 @@ function setLang(l) {
   document.getElementById('nome').placeholder = t.qNome.ph;
 
   // Q3 — Cargo
-  set('tag-cargo', `${t.question} 3 ${t.of} ${TOTAL}`);
-  set('lbl-cargo', t.qCargo.lbl); set('hnt-cargo', t.qCargo.hnt);
-  document.getElementById('cargo').placeholder = t.qCargo.ph;
+  set('tag-email', `${t.question} 3 ${t.of} ${TOTAL}`);
+  set('lbl-email', t.qEmail.lbl); set('hnt-email', t.qEmail.hnt);
+  document.getElementById('email').placeholder = t.qEmail.ph;
 
   // Q4 — NPS
   set('tag-2', `${t.question} 4 ${t.of} ${TOTAL}`);
@@ -639,6 +658,7 @@ function setLang(l) {
   set('tag-3', `${t.question} 5 ${t.of} ${TOTAL}`);
   if (nps !== null) applyConditional(nps);
   document.getElementById('cond-resp').placeholder = t.placeholder;
+  set('err-condresp', t.errRequired);
 
   // Q6 — Support
   set('tag-4', `${t.question} 6 ${t.of} ${TOTAL}`);
@@ -670,11 +690,13 @@ function setLang(l) {
   set('tag-7', `${t.question} 10 ${t.of} ${TOTAL}`);
   set('lbl-7', t.q7.lbl); set('hnt-7', t.q7.hnt);
   buildChecks(t.aspects);
+  set('err-chks', t.errChks);
 
   // Q11 — Open
   set('tag-8', `${t.question} 11 ${t.of} ${TOTAL}`);
   set('lbl-8', t.q8.lbl); set('hnt-8', t.q8.hnt);
   document.getElementById('melhoria').placeholder = t.q8.ph;
+  set('err-melhoria', t.errRequired);
 
   // Thank you
   set('ty-title', t.tyTitle); set('ty-body', t.tyBody);
@@ -712,11 +734,15 @@ function updateProgress(s) {
 
 // ── Validate ──
 function validate(s) {
-  if (s === 4 && nps === null) { document.getElementById('err-nps').classList.add('show'); return false; }
-  if (s === 6 && !document.querySelector('#opts-suporte .opt.sel'))     { document.getElementById('err-suporte').classList.add('show'); return false; }
-  if (s === 7 && !(faceSelections.vel && faceSelections.qual && faceSelections.proat)) { document.getElementById('err-comtec').classList.add('show'); return false; }
-  if (s === 8 && !document.querySelector('#opts-comunicacao .opt.sel')) { document.getElementById('err-comunicacao').classList.add('show'); return false; }
-  if (s === 9 && !document.querySelector('#opts-resultados .opt.sel'))  { document.getElementById('err-resultados').classList.add('show'); return false; }
+  if (s === 1  && !document.getElementById('empresa').value.trim())     { document.getElementById('err-empresa').classList.add('show'); return false; }
+  if (s === 4  && nps === null) { document.getElementById('err-nps').classList.add('show'); return false; }
+  if (s === 5  && !document.getElementById('cond-resp').value.trim())   { document.getElementById('err-condresp').classList.add('show'); return false; }
+  if (s === 6  && !document.querySelector('#opts-suporte .opt.sel'))    { document.getElementById('err-suporte').classList.add('show'); return false; }
+  if (s === 7  && !(faceSelections.vel && faceSelections.qual && faceSelections.proat)) { document.getElementById('err-comtec').classList.add('show'); return false; }
+  if (s === 8  && !document.querySelector('#opts-comunicacao .opt.sel')){ document.getElementById('err-comunicacao').classList.add('show'); return false; }
+  if (s === 9  && !document.querySelector('#opts-resultados .opt.sel')) { document.getElementById('err-resultados').classList.add('show'); return false; }
+  if (s === 10 && !document.querySelector('.chk.sel'))                  { document.getElementById('err-chks').classList.add('show'); return false; }
+  if (s === 11 && !document.getElementById('melhoria').value.trim())    { document.getElementById('err-melhoria').classList.add('show'); return false; }
   return true;
 }
 
@@ -746,7 +772,7 @@ function submitForm() {
     language:     lang,
     empresa:      document.getElementById('empresa').value.trim(),
     nome:         document.getElementById('nome').value.trim(),
-    cargo:        document.getElementById('cargo').value.trim(),
+    email:        document.getElementById('email').value.trim(),
     nps,
     cond_resp:    document.getElementById('cond-resp').value.trim(),
     suporte:      document.querySelector('#opts-suporte .opt.sel')?.dataset.v     || '',
