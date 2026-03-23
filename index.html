@@ -200,6 +200,26 @@
     .btn-next:hover:not(:disabled) { background:var(--orange-h); transform:translateY(-1px); box-shadow:0 4px 14px rgba(255,85,0,.28); }
     .btn-next:disabled { background:var(--gray-light); color:var(--gray); cursor:not-allowed; }
 
+    /* ── FACE RATING ── */
+    .face-grid { display:flex; flex-direction:column; gap:10px; }
+    .face-row {
+      display:flex; align-items:center; justify-content:space-between;
+      padding:13px 16px; border:1.5px solid var(--border); border-radius:var(--radius);
+      background:var(--cream);
+    }
+    .face-row-label { font-size:13px; font-weight:500; color:var(--dark); }
+    .face-opts { display:flex; gap:8px; }
+    .face-btn {
+      width:46px; height:46px; border:1.5px solid var(--border); border-radius:50%;
+      background:var(--white); font-size:22px; cursor:pointer;
+      transition:all .18s; display:flex; align-items:center; justify-content:center;
+      line-height:1;
+    }
+    .face-btn:hover { border-color:var(--orange); transform:scale(1.12); }
+    .face-btn.sel-good    { border-color:var(--success); background:#E6F7F7; transform:scale(1.12); }
+    .face-btn.sel-neutral { border-color:var(--warning); background:#FFF8EC; transform:scale(1.12); }
+    .face-btn.sel-bad     { border-color:var(--error);   background:#FFF0EE; transform:scale(1.12); }
+
     /* ── DIVIDER ── */
     .divider { height:1px; background:#F0F0F0; margin:0 -40px 28px; }
 
@@ -311,8 +331,43 @@
       <div class="err"     id="err-suporte"></div>
     </div>
 
-    <!-- 7 — Communication -->
+    <!-- 7 — Comunicação Técnica -->
     <div class="step" data-step="7">
+      <div class="divider"></div>
+      <div class="q-tag"   id="tag-comtec"></div>
+      <div class="q-label" id="lbl-comtec"></div>
+      <div class="q-hint"  id="hnt-comtec"></div>
+      <div class="face-grid">
+        <div class="face-row">
+          <span class="face-row-label" id="face-lbl-vel"></span>
+          <div class="face-opts">
+            <button type="button" class="face-btn" data-dim="vel" data-v="good">😊</button>
+            <button type="button" class="face-btn" data-dim="vel" data-v="neutral">😐</button>
+            <button type="button" class="face-btn" data-dim="vel" data-v="bad">😞</button>
+          </div>
+        </div>
+        <div class="face-row">
+          <span class="face-row-label" id="face-lbl-qual"></span>
+          <div class="face-opts">
+            <button type="button" class="face-btn" data-dim="qual" data-v="good">😊</button>
+            <button type="button" class="face-btn" data-dim="qual" data-v="neutral">😐</button>
+            <button type="button" class="face-btn" data-dim="qual" data-v="bad">😞</button>
+          </div>
+        </div>
+        <div class="face-row">
+          <span class="face-row-label" id="face-lbl-proat"></span>
+          <div class="face-opts">
+            <button type="button" class="face-btn" data-dim="proat" data-v="good">😊</button>
+            <button type="button" class="face-btn" data-dim="proat" data-v="neutral">😐</button>
+            <button type="button" class="face-btn" data-dim="proat" data-v="bad">😞</button>
+          </div>
+        </div>
+      </div>
+      <div class="err" id="err-comtec"></div>
+    </div>
+
+    <!-- 8 — Communication -->
+    <div class="step" data-step="8">
       <div class="divider"></div>
       <div class="q-tag"   id="tag-5"></div>
       <div class="q-label" id="lbl-5"></div>
@@ -321,8 +376,8 @@
       <div class="err"     id="err-comunicacao"></div>
     </div>
 
-    <!-- 8 — Results -->
-    <div class="step" data-step="8">
+    <!-- 9 — Results -->
+    <div class="step" data-step="9">
       <div class="divider"></div>
       <div class="q-tag"   id="tag-6"></div>
       <div class="q-label" id="lbl-6"></div>
@@ -331,8 +386,8 @@
       <div class="err"     id="err-resultados"></div>
     </div>
 
-    <!-- 9 — Checkboxes -->
-    <div class="step" data-step="9">
+    <!-- 10 — Checkboxes -->
+    <div class="step" data-step="10">
       <div class="divider"></div>
       <div class="q-tag"   id="tag-7"></div>
       <div class="q-label" id="lbl-7"></div>
@@ -340,8 +395,8 @@
       <div class="checks"  id="chks"></div>
     </div>
 
-    <!-- 10 — Open -->
-    <div class="step" data-step="10">
+    <!-- 11 — Open -->
+    <div class="step" data-step="11">
       <div class="divider"></div>
       <div class="q-tag"   id="tag-8"></div>
       <div class="q-label" id="lbl-8"></div>
@@ -390,6 +445,7 @@ const T = {
     qNome: { lbl:'Qual é o seu nome?',                                                                         hnt:'Para sabermos quem está nos dando este feedback.',                                  ph:'Seu nome' },
     qCargo:{ lbl:'Qual é o seu cargo?',                                                                        hnt:'Nos ajuda a entender melhor o seu contexto.',                                       ph:'Seu cargo' },
     q2:  { lbl:'Em uma escala de 0 a 10, qual a probabilidade de você recomendar a Deuna como parceira estratégica?', hnt:'0 = muito improvável · 10 = muito provável' },
+    qComTec: { lbl:'Como você avalia a comunicação técnica?', hnt:'Avalie cada aspecto separadamente.', vel:'Velocidade', qual:'Qualidade', proat:'Proatividade', err:'Avalie todos os aspectos para continuar.' },
     q4:  { lbl:'O suporte técnico da Deuna tem sido ágil e eficaz',                                           hnt:'Tempo de resposta, qualidade das soluções e proatividade.' },
     q5:  { lbl:'A comunicação da equipe de parcerias da Deuna atende às suas expectativas',                    hnt:'Frequência, clareza e disponibilidade da equipe.' },
     q6:  { lbl:'A parceria com a Deuna tem gerado os resultados esperados para o seu negócio',                 hnt:'Volume de negócios, qualidade da integração e retorno gerado.' },
@@ -423,6 +479,7 @@ const T = {
     qNome: { lbl:'¿Cuál es tu nombre?',                                                                               hnt:'Para saber quién nos está dando este feedback.',                        ph:'Tu nombre' },
     qCargo:{ lbl:'¿Cuál es tu cargo?',                                                                                hnt:'Nos ayuda a entender mejor tu contexto.',                               ph:'Tu cargo' },
     q2:  { lbl:'En una escala del 0 al 10, ¿qué tan probable es que recomiendes a Deuna como socio estratégico?',      hnt:'0 = muy improbable · 10 = muy probable' },
+    qComTec: { lbl:'¿Cómo evalúas la comunicación técnica?', hnt:'Evalúa cada aspecto por separado.', vel:'Velocidad', qual:'Calidad', proat:'Proactividad', err:'Evalúa todos los aspectos para continuar.' },
     q4:  { lbl:'El soporte técnico de Deuna ha sido ágil y eficaz',                                                     hnt:'Tiempo de respuesta, calidad de las soluciones y proactividad.' },
     q5:  { lbl:'La comunicación del equipo de alianzas de Deuna cumple con tus expectativas',                           hnt:'Frecuencia, claridad y disponibilidad del equipo.' },
     q6:  { lbl:'La alianza con Deuna ha generado los resultados esperados para tu negocio',                             hnt:'Volumen de negocio, calidad de la integración y retorno generado.' },
@@ -456,6 +513,7 @@ const T = {
     qNome: { lbl:'What is your name?',                                                                                  hnt:'So we know who is giving us this feedback.',                         ph:'Your name' },
     qCargo:{ lbl:'What is your job title?',                                                                             hnt:'Helps us better understand your context.',                           ph:'Your job title' },
     q2:  { lbl:'On a scale of 0 to 10, how likely are you to recommend Deuna as a strategic partner?',                  hnt:'0 = very unlikely · 10 = very likely' },
+    qComTec: { lbl:'How do you rate the technical communication?', hnt:'Rate each aspect separately.', vel:'Speed', qual:'Quality', proat:'Proactivity', err:'Please rate all aspects to continue.' },
     q4:  { lbl:'Deuna\'s technical support has been fast and effective',                                                 hnt:'Response time, quality of solutions, and proactiveness.' },
     q5:  { lbl:'The communication from Deuna\'s partnerships team meets your expectations',                              hnt:'Frequency, clarity, and availability of the team.' },
     q6:  { lbl:'The partnership with Deuna has delivered the expected results for your business',                        hnt:'Business volume, integration quality, and return generated.' },
@@ -473,7 +531,7 @@ const T = {
 // ═══════════════════════════════════════════════════
 // STATE
 // ═══════════════════════════════════════════════════
-const TOTAL = 10;
+const TOTAL = 11;
 let step  = 1;
 let nps   = null;
 let lang  = 'pt';
@@ -492,6 +550,23 @@ for (let i = 0; i <= 10; i++) {
   });
   grid.appendChild(b);
 }
+
+// ── Build face buttons (once) ──
+const faceSelections = { vel: null, qual: null, proat: null };
+document.querySelectorAll('.face-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const dim = btn.dataset.dim;
+    document.querySelectorAll(`.face-btn[data-dim="${dim}"]`).forEach(b => {
+      b.classList.remove('sel-good', 'sel-neutral', 'sel-bad');
+    });
+    const cls = btn.dataset.v === 'good' ? 'sel-good' : btn.dataset.v === 'neutral' ? 'sel-neutral' : 'sel-bad';
+    btn.classList.add(cls);
+    faceSelections[dim] = btn.dataset.v;
+    if (faceSelections.vel && faceSelections.qual && faceSelections.proat) {
+      document.getElementById('err-comtec').classList.remove('show');
+    }
+  });
+});
 
 // ── Build likert options ──
 function buildOptions(containerId, values) {
@@ -571,25 +646,33 @@ function setLang(l) {
   set('err-suporte', t.errOpt);
   buildOptions('opts-suporte', t.likert);
 
-  // Q7 — Communication
-  set('tag-5', `${t.question} 7 ${t.of} ${TOTAL}`);
+  // Q7 — Comunicação Técnica
+  set('tag-comtec', `${t.question} 7 ${t.of} ${TOTAL}`);
+  set('lbl-comtec', t.qComTec.lbl); set('hnt-comtec', t.qComTec.hnt);
+  set('face-lbl-vel', t.qComTec.vel);
+  set('face-lbl-qual', t.qComTec.qual);
+  set('face-lbl-proat', t.qComTec.proat);
+  set('err-comtec', t.qComTec.err);
+
+  // Q8 — Communication
+  set('tag-5', `${t.question} 8 ${t.of} ${TOTAL}`);
   set('lbl-5', t.q5.lbl); set('hnt-5', t.q5.hnt);
   set('err-comunicacao', t.errOpt);
   buildOptions('opts-comunicacao', t.likert);
 
-  // Q8 — Results
-  set('tag-6', `${t.question} 8 ${t.of} ${TOTAL}`);
+  // Q9 — Results
+  set('tag-6', `${t.question} 9 ${t.of} ${TOTAL}`);
   set('lbl-6', t.q6.lbl); set('hnt-6', t.q6.hnt);
   set('err-resultados', t.errOpt);
   buildOptions('opts-resultados', t.likert);
 
-  // Q9 — Checkboxes
-  set('tag-7', `${t.question} 9 ${t.of} ${TOTAL}`);
+  // Q10 — Checkboxes
+  set('tag-7', `${t.question} 10 ${t.of} ${TOTAL}`);
   set('lbl-7', t.q7.lbl); set('hnt-7', t.q7.hnt);
   buildChecks(t.aspects);
 
-  // Q10 — Open
-  set('tag-8', `${t.question} 10 ${t.of} ${TOTAL}`);
+  // Q11 — Open
+  set('tag-8', `${t.question} 11 ${t.of} ${TOTAL}`);
   set('lbl-8', t.q8.lbl); set('hnt-8', t.q8.hnt);
   document.getElementById('melhoria').placeholder = t.q8.ph;
 
@@ -631,8 +714,9 @@ function updateProgress(s) {
 function validate(s) {
   if (s === 4 && nps === null) { document.getElementById('err-nps').classList.add('show'); return false; }
   if (s === 6 && !document.querySelector('#opts-suporte .opt.sel'))     { document.getElementById('err-suporte').classList.add('show'); return false; }
-  if (s === 7 && !document.querySelector('#opts-comunicacao .opt.sel')) { document.getElementById('err-comunicacao').classList.add('show'); return false; }
-  if (s === 8 && !document.querySelector('#opts-resultados .opt.sel'))  { document.getElementById('err-resultados').classList.add('show'); return false; }
+  if (s === 7 && !(faceSelections.vel && faceSelections.qual && faceSelections.proat)) { document.getElementById('err-comtec').classList.add('show'); return false; }
+  if (s === 8 && !document.querySelector('#opts-comunicacao .opt.sel')) { document.getElementById('err-comunicacao').classList.add('show'); return false; }
+  if (s === 9 && !document.querySelector('#opts-resultados .opt.sel'))  { document.getElementById('err-resultados').classList.add('show'); return false; }
   return true;
 }
 
@@ -666,6 +750,9 @@ function submitForm() {
     nps,
     cond_resp:    document.getElementById('cond-resp').value.trim(),
     suporte:      document.querySelector('#opts-suporte .opt.sel')?.dataset.v     || '',
+    comtec_vel:   faceSelections.vel   || '',
+    comtec_qual:  faceSelections.qual  || '',
+    comtec_proat: faceSelections.proat || '',
     comunicacao:  document.querySelector('#opts-comunicacao .opt.sel')?.dataset.v || '',
     resultados:   document.querySelector('#opts-resultados .opt.sel')?.dataset.v  || '',
     aspectos:     [...document.querySelectorAll('.chk.sel .chk-text')].map(e => e.textContent),
