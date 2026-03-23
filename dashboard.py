@@ -295,12 +295,12 @@ def load_data():
     from google.oauth2.credentials import Credentials
     from google.auth.transport.requests import Request
 
-    # Lê credenciais de variáveis de ambiente (Railway) ou arquivos locais (Mac)
-    if os.environ.get("GOOGLE_CLIENT_ID"):
-        client_id     = os.environ["GOOGLE_CLIENT_ID"]
-        client_secret = os.environ["GOOGLE_CLIENT_SECRET"]
-        access_token  = os.environ.get("GOOGLE_ACCESS_TOKEN", "")
-        refresh_token = os.environ["GOOGLE_REFRESH_TOKEN"]
+    # Lê credenciais — Streamlit Secrets (produção) ou arquivos locais (dev)
+    if "google" in st.secrets:
+        client_id     = st.secrets["google"]["client_id"]
+        client_secret = st.secrets["google"]["client_secret"]
+        access_token  = st.secrets["google"].get("access_token", "")
+        refresh_token = st.secrets["google"]["refresh_token"]
     else:
         with open("/Users/bsampaio/gcp-oauth.keys.json") as f:
             creds_data = json.load(f)["installed"]
