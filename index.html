@@ -220,6 +220,35 @@
     .face-btn.sel-neutral { border-color:var(--warning); background:#FFF8EC; transform:scale(1.12); }
     .face-btn.sel-bad     { border-color:var(--error);   background:#FFF0EE; transform:scale(1.12); }
 
+    /* ── SLIDER RATING ── */
+    .slider-grid { display:flex; flex-direction:column; gap:14px; }
+    .slider-item {
+      display:flex; flex-direction:column; gap:10px;
+      padding:14px 16px; border:1.5px solid var(--border);
+      border-radius:var(--radius); background:var(--cream);
+    }
+    .slider-item-label { font-size:13px; font-weight:600; color:var(--dark); }
+    .slider-track { display:flex; align-items:center; gap:10px; }
+    .slider-edge { font-size:10px; color:var(--gray); white-space:nowrap; }
+    .slider-val { font-size:15px; font-weight:700; color:var(--orange); min-width:24px; text-align:center; }
+    input[type="range"] {
+      -webkit-appearance:none; flex:1; height:4px;
+      border-radius:99px; outline:none; cursor:pointer;
+      background: linear-gradient(to right, var(--orange) 45%, var(--gray-light) 45%);
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance:none; width:20px; height:20px;
+      background:var(--orange); border-radius:50%;
+      border:3px solid #fff; box-shadow:0 1px 6px rgba(0,0,0,.18);
+      cursor:pointer; transition:transform .12s;
+    }
+    input[type="range"]::-webkit-slider-thumb:hover { transform:scale(1.15); }
+    input[type="range"]::-moz-range-thumb {
+      width:20px; height:20px; background:var(--orange);
+      border-radius:50%; border:3px solid #fff;
+      box-shadow:0 1px 6px rgba(0,0,0,.18); cursor:pointer;
+    }
+
     /* ── DIVIDER ── */
     .divider { height:1px; background:#F0F0F0; margin:0 -40px 28px; }
 
@@ -388,8 +417,45 @@
       <div class="err"     id="err-resultados"></div>
     </div>
 
-    <!-- 10 — Checkboxes -->
+    <!-- 10 — Integração -->
     <div class="step" data-step="10">
+      <div class="divider"></div>
+      <div class="q-tag"   id="tag-integ"></div>
+      <div class="q-label" id="lbl-integ"></div>
+      <div class="q-hint"  id="hnt-integ"></div>
+      <div class="slider-grid">
+        <div class="slider-item">
+          <span class="slider-item-label" id="integ-lbl-rapidez"></span>
+          <div class="slider-track">
+            <span class="slider-edge" id="integ-low-rapidez"></span>
+            <input type="range" id="integ-rapidez" min="1" max="10" value="5" />
+            <span class="slider-edge" id="integ-high-rapidez"></span>
+            <span class="slider-val" id="integ-val-rapidez">5</span>
+          </div>
+        </div>
+        <div class="slider-item">
+          <span class="slider-item-label" id="integ-lbl-qual"></span>
+          <div class="slider-track">
+            <span class="slider-edge" id="integ-low-qual"></span>
+            <input type="range" id="integ-qual" min="1" max="10" value="5" />
+            <span class="slider-edge" id="integ-high-qual"></span>
+            <span class="slider-val" id="integ-val-qual">5</span>
+          </div>
+        </div>
+        <div class="slider-item">
+          <span class="slider-item-label" id="integ-lbl-facil"></span>
+          <div class="slider-track">
+            <span class="slider-edge" id="integ-low-facil"></span>
+            <input type="range" id="integ-facil" min="1" max="10" value="5" />
+            <span class="slider-edge" id="integ-high-facil"></span>
+            <span class="slider-val" id="integ-val-facil">5</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 11 — Checkboxes -->
+    <div class="step" data-step="11">
       <div class="divider"></div>
       <div class="q-tag"   id="tag-7"></div>
       <div class="q-label" id="lbl-7"></div>
@@ -398,8 +464,8 @@
       <div class="err" id="err-chks"></div>
     </div>
 
-    <!-- 11 — Open -->
-    <div class="step" data-step="11">
+    <!-- 12 — Open -->
+    <div class="step" data-step="12">
       <div class="divider"></div>
       <div class="q-tag"   id="tag-8"></div>
       <div class="q-label" id="lbl-8"></div>
@@ -452,6 +518,7 @@ const T = {
     qEmail:{ lbl:'Qual é o seu e-mail?',                                                                       hnt:'Opcional — caso queira que entremos em contato.',                                   ph:'seu@email.com' },
     q2:  { lbl:'Em uma escala de 0 a 10, qual a probabilidade de você recomendar a Deuna como parceira estratégica?', hnt:'0 = muito improvável · 10 = muito provável' },
     qComTec: { lbl:'Como você avalia a comunicação técnica?', hnt:'Avalie cada aspecto separadamente.', vel:'Velocidade', qual:'Qualidade', proat:'Proatividade', err:'Avalie todos os aspectos para continuar.' },
+    qInteg: { lbl:'Como foi a experiência com o processo de integração?', hnt:'Avalie cada aspecto de 1 (muito ruim) a 10 (muito bom).', low:'Muito ruim', high:'Muito bom', rapidez:'Rapidez', qual:'Qualidade técnica', facil:'Facilidade do processo' },
     q4:  { lbl:'O suporte técnico da Deuna tem sido ágil e eficaz',                                           hnt:'Tempo de resposta, qualidade das soluções e proatividade.' },
     q5:  { lbl:'A comunicação da equipe de parcerias da Deuna atende às suas expectativas',                    hnt:'Frequência, clareza e disponibilidade da equipe.' },
     q6:  { lbl:'A parceria com a Deuna tem gerado os resultados esperados para o seu negócio',                 hnt:'Volume de negócios, qualidade da integração e retorno gerado.' },
@@ -488,6 +555,7 @@ const T = {
     qEmail:{ lbl:'¿Cuál es tu correo electrónico?',                                                                   hnt:'Opcional — por si quieres que nos pongamos en contacto.',               ph:'tu@email.com' },
     q2:  { lbl:'En una escala del 0 al 10, ¿qué tan probable es que recomiendes a Deuna como socio estratégico?',      hnt:'0 = muy improbable · 10 = muy probable' },
     qComTec: { lbl:'¿Cómo evalúas la comunicación técnica?', hnt:'Evalúa cada aspecto por separado.', vel:'Velocidad', qual:'Calidad', proat:'Proactividad', err:'Evalúa todos los aspectos para continuar.' },
+    qInteg: { lbl:'¿Cómo fue la experiencia con el proceso de integración?', hnt:'Evalúa cada aspecto de 1 (muy malo) a 10 (muy bueno).', low:'Muy malo', high:'Muy bueno', rapidez:'Rapidez', qual:'Calidad técnica', facil:'Facilidad del proceso' },
     q4:  { lbl:'El soporte técnico de Deuna ha sido ágil y eficaz',                                                     hnt:'Tiempo de respuesta, calidad de las soluciones y proactividad.' },
     q5:  { lbl:'La comunicación del equipo de alianzas de Deuna cumple con tus expectativas',                           hnt:'Frecuencia, claridad y disponibilidad del equipo.' },
     q6:  { lbl:'La alianza con Deuna ha generado los resultados esperados para tu negocio',                             hnt:'Volumen de negocio, calidad de la integración y retorno generado.' },
@@ -524,6 +592,7 @@ const T = {
     qEmail:{ lbl:'What is your email?',                                                                                 hnt:'Optional — in case you\'d like us to follow up.',                    ph:'your@email.com' },
     q2:  { lbl:'On a scale of 0 to 10, how likely are you to recommend Deuna as a strategic partner?',                  hnt:'0 = very unlikely · 10 = very likely' },
     qComTec: { lbl:'How do you rate the technical communication?', hnt:'Rate each aspect separately.', vel:'Speed', qual:'Quality', proat:'Proactivity', err:'Please rate all aspects to continue.' },
+    qInteg: { lbl:'How was your experience with the integration process?', hnt:'Rate each aspect from 1 (very bad) to 10 (very good).', low:'Very bad', high:'Very good', rapidez:'Speed', qual:'Technical quality', facil:'Process ease' },
     q4:  { lbl:'Deuna\'s technical support has been fast and effective',                                                 hnt:'Response time, quality of solutions, and proactiveness.' },
     q5:  { lbl:'The communication from Deuna\'s partnerships team meets your expectations',                              hnt:'Frequency, clarity, and availability of the team.' },
     q6:  { lbl:'The partnership with Deuna has delivered the expected results for your business',                        hnt:'Business volume, integration quality, and return generated.' },
@@ -541,7 +610,7 @@ const T = {
 // ═══════════════════════════════════════════════════
 // STATE
 // ═══════════════════════════════════════════════════
-const TOTAL = 11;
+const TOTAL = 12;
 let step  = 1;
 let nps   = null;
 let lang  = 'pt';
@@ -585,6 +654,20 @@ document.querySelectorAll('.face-btn').forEach(btn => {
     }
   });
 });
+
+// ── Slider updates ──
+function initSlider(id) {
+  const input = document.getElementById(id);
+  const valEl = document.getElementById(`integ-val-${id.replace('integ-','')}`);
+  function update() {
+    const pct = (input.value - 1) / 9 * 100;
+    input.style.background = `linear-gradient(to right, var(--orange) ${pct}%, var(--gray-light) ${pct}%)`;
+    valEl.textContent = input.value;
+  }
+  input.addEventListener('input', update);
+  update();
+}
+['integ-rapidez','integ-qual','integ-facil'].forEach(initSlider);
 
 // ── Build likert options ──
 function buildOptions(containerId, values) {
@@ -686,14 +769,25 @@ function setLang(l) {
   set('err-resultados', t.errOpt);
   buildOptions('opts-resultados', t.likert);
 
-  // Q10 — Checkboxes
-  set('tag-7', `${t.question} 10 ${t.of} ${TOTAL}`);
+  // Q10 — Integração
+  set('tag-integ', `${t.question} 10 ${t.of} ${TOTAL}`);
+  set('lbl-integ', t.qInteg.lbl); set('hnt-integ', t.qInteg.hnt);
+  set('integ-lbl-rapidez', t.qInteg.rapidez);
+  set('integ-lbl-qual',    t.qInteg.qual);
+  set('integ-lbl-facil',   t.qInteg.facil);
+  ['rapidez','qual','facil'].forEach(k => {
+    set(`integ-low-${k}`,  t.qInteg.low);
+    set(`integ-high-${k}`, t.qInteg.high);
+  });
+
+  // Q11 — Checkboxes
+  set('tag-7', `${t.question} 11 ${t.of} ${TOTAL}`);
   set('lbl-7', t.q7.lbl); set('hnt-7', t.q7.hnt);
   buildChecks(t.aspects);
   set('err-chks', t.errChks);
 
-  // Q11 — Open
-  set('tag-8', `${t.question} 11 ${t.of} ${TOTAL}`);
+  // Q12 — Open
+  set('tag-8', `${t.question} 12 ${t.of} ${TOTAL}`);
   set('lbl-8', t.q8.lbl); set('hnt-8', t.q8.hnt);
   document.getElementById('melhoria').placeholder = t.q8.ph;
   set('err-melhoria', t.errRequired);
@@ -741,8 +835,8 @@ function validate(s) {
   if (s === 7  && !(faceSelections.vel && faceSelections.qual && faceSelections.proat)) { document.getElementById('err-comtec').classList.add('show'); return false; }
   if (s === 8  && !document.querySelector('#opts-comunicacao .opt.sel')){ document.getElementById('err-comunicacao').classList.add('show'); return false; }
   if (s === 9  && !document.querySelector('#opts-resultados .opt.sel')) { document.getElementById('err-resultados').classList.add('show'); return false; }
-  if (s === 10 && !document.querySelector('.chk.sel'))                  { document.getElementById('err-chks').classList.add('show'); return false; }
-  if (s === 11 && !document.getElementById('melhoria').value.trim())    { document.getElementById('err-melhoria').classList.add('show'); return false; }
+  if (s === 11 && !document.querySelector('.chk.sel'))                  { document.getElementById('err-chks').classList.add('show'); return false; }
+  if (s === 12 && !document.getElementById('melhoria').value.trim())    { document.getElementById('err-melhoria').classList.add('show'); return false; }
   return true;
 }
 
@@ -779,6 +873,9 @@ function submitForm() {
     comtec_vel:   faceSelections.vel   || '',
     comtec_qual:  faceSelections.qual  || '',
     comtec_proat: faceSelections.proat || '',
+    integ_rapidez: document.getElementById('integ-rapidez').value,
+    integ_qual:    document.getElementById('integ-qual').value,
+    integ_facil:   document.getElementById('integ-facil').value,
     comunicacao:  document.querySelector('#opts-comunicacao .opt.sel')?.dataset.v || '',
     resultados:   document.querySelector('#opts-resultados .opt.sel')?.dataset.v  || '',
     aspectos:     [...document.querySelectorAll('.chk.sel .chk-text')].map(e => e.textContent),
