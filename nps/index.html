@@ -441,8 +441,25 @@
       </div>
     </div>
 
-    <!-- 10 — Integração -->
+    <!-- 11 — Visibilidade Pipeline -->
     <div class="step" data-step="11">
+      <div class="divider"></div>
+      <div class="q-tag"   id="tag-visib"></div>
+      <div class="q-label" id="lbl-visib"></div>
+      <div class="q-hint"  id="hnt-visib"></div>
+      <div class="slider-item">
+        <div class="slider-track">
+          <span class="slider-edge" id="visib-low"></span>
+          <input type="range" id="visib-slider" min="1" max="10" value="5" />
+          <span class="slider-edge" id="visib-high"></span>
+          <span class="slider-val" id="visib-val">5</span>
+        </div>
+      </div>
+      <textarea id="visib-comment" style="margin-top:20px" id="visib-comment"></textarea>
+    </div>
+
+    <!-- 12 — Integração -->
+    <div class="step" data-step="12">
       <div class="divider"></div>
       <div class="q-tag"   id="tag-integ"></div>
       <div class="q-label" id="lbl-integ"></div>
@@ -478,8 +495,8 @@
       </div>
     </div>
 
-    <!-- 11 — Checkboxes -->
-    <div class="step" data-step="12">
+    <!-- 13 — Checkboxes -->
+    <div class="step" data-step="13">
       <div class="divider"></div>
       <div class="q-tag"   id="tag-7"></div>
       <div class="q-label" id="lbl-7"></div>
@@ -488,8 +505,8 @@
       <div class="err" id="err-chks"></div>
     </div>
 
-    <!-- 12 — Open -->
-    <div class="step" data-step="13">
+    <!-- 14 — Open -->
+    <div class="step" data-step="14">
       <div class="divider"></div>
       <div class="q-tag"   id="tag-8"></div>
       <div class="q-label" id="lbl-8"></div>
@@ -541,6 +558,7 @@ const T = {
     qNome: { lbl:'Qual é o seu nome?',                                                                         hnt:'Para sabermos quem está nos dando este feedback.',                                  ph:'Seu nome' },
     qEmail:{ lbl:'Qual é o seu e-mail?',                                                                       hnt:'Opcional — caso queira que entremos em contato.',                                   ph:'seu@email.com' },
     qValor: { lbl:'O quanto você tem clareza sobre o valor agregado da Deuna e nossas soluções?', hnt:'', low:'Nada claro', high:'Muito claro' },
+    qVisib: { lbl:'O quanto você tem visibilidade sobre o pipeline e os resultados da nossa parceria?', hnt:'Clientes prospectados em conjunto, volume de negócios gerados e status dos projetos em andamento.', low:'Nenhuma visibilidade', high:'Visibilidade total', ph:'Quer comentar algo sobre isso? (opcional)' },
     q2:  { lbl:'Em uma escala de 0 a 10, qual a probabilidade de você recomendar a Deuna como parceira estratégica?', hnt:'0 = muito improvável · 10 = muito provável' },
     qComTec: { lbl:'Como você avalia a comunicação técnica?', hnt:'Avalie cada aspecto separadamente.', vel:'Velocidade', qual:'Qualidade', proat:'Proatividade', err:'Avalie todos os aspectos para continuar.' },
     qInteg: { lbl:'Como foi a experiência com o processo de integração?', hnt:'Avalie cada aspecto de 1 (muito ruim) a 10 (muito bom).', low:'Muito ruim', high:'Muito bom', rapidez:'Rapidez', qual:'Qualidade técnica', facil:'Facilidade do processo' },
@@ -579,6 +597,7 @@ const T = {
     qNome: { lbl:'¿Cuál es tu nombre?',                                                                               hnt:'Para saber quién nos está dando este feedback.',                        ph:'Tu nombre' },
     qEmail:{ lbl:'¿Cuál es tu correo electrónico?',                                                                   hnt:'Opcional — por si quieres que nos pongamos en contacto.',               ph:'tu@email.com' },
     qValor: { lbl:'¿Qué tan claro tienes el valor agregado de Deuna y nuestras soluciones?', hnt:'', low:'Nada claro', high:'Muy claro' },
+    qVisib: { lbl:'¿Qué tanta visibilidad tienes sobre el pipeline y los resultados de nuestra alianza?', hnt:'Clientes prospectados en conjunto, volumen de negocio generado y estado de los proyectos en curso.', low:'Ninguna visibilidad', high:'Visibilidad total', ph:'¿Quieres comentar algo sobre esto? (opcional)' },
     q2:  { lbl:'En una escala del 0 al 10, ¿qué tan probable es que recomiendes a Deuna como socio estratégico?',      hnt:'0 = muy improbable · 10 = muy probable' },
     qComTec: { lbl:'¿Cómo evalúas la comunicación técnica?', hnt:'Evalúa cada aspecto por separado.', vel:'Velocidad', qual:'Calidad', proat:'Proactividad', err:'Evalúa todos los aspectos para continuar.' },
     qInteg: { lbl:'¿Cómo fue la experiencia con el proceso de integración?', hnt:'Evalúa cada aspecto de 1 (muy malo) a 10 (muy bueno).', low:'Muy malo', high:'Muy bueno', rapidez:'Rapidez', qual:'Calidad técnica', facil:'Facilidad del proceso' },
@@ -617,6 +636,7 @@ const T = {
     qNome: { lbl:'What is your name?',                                                                                  hnt:'So we know who is giving us this feedback.',                         ph:'Your name' },
     qEmail:{ lbl:'What is your email?',                                                                                 hnt:'Optional — in case you\'d like us to follow up.',                    ph:'your@email.com' },
     qValor: { lbl:'How clear are you on the value that Deuna and our solutions bring?', hnt:'', low:'Not clear at all', high:'Very clear' },
+    qVisib: { lbl:'How much visibility do you have into the pipeline and results of our partnership?', hnt:'Jointly prospected clients, business volume generated, and status of ongoing projects.', low:'No visibility', high:'Full visibility', ph:'Want to add anything about this? (optional)' },
     q2:  { lbl:'On a scale of 0 to 10, how likely are you to recommend Deuna as a strategic partner?',                  hnt:'0 = very unlikely · 10 = very likely' },
     qComTec: { lbl:'How do you rate the technical communication?', hnt:'Rate each aspect separately.', vel:'Speed', qual:'Quality', proat:'Proactivity', err:'Please rate all aspects to continue.' },
     qInteg: { lbl:'How was your experience with the integration process?', hnt:'Rate each aspect from 1 (very bad) to 10 (very good).', low:'Very bad', high:'Very good', rapidez:'Speed', qual:'Technical quality', facil:'Process ease' },
@@ -637,7 +657,7 @@ const T = {
 // ═══════════════════════════════════════════════════
 // STATE
 // ═══════════════════════════════════════════════════
-const TOTAL = 13;
+const TOTAL = 14;
 let step  = 1;
 let nps   = null;
 let lang  = 'pt';
@@ -700,6 +720,19 @@ function initSlider(id) {
 (function() {
   const input = document.getElementById('valor-slider');
   const valEl = document.getElementById('valor-val');
+  function update() {
+    const pct = (input.value - 1) / 9 * 100;
+    input.style.background = `linear-gradient(to right, var(--orange) ${pct}%, var(--gray-light) ${pct}%)`;
+    valEl.textContent = input.value;
+  }
+  input.addEventListener('input', update);
+  update();
+})();
+
+// ── Init visib slider ──
+(function() {
+  const input = document.getElementById('visib-slider');
+  const valEl = document.getElementById('visib-val');
   function update() {
     const pct = (input.value - 1) / 9 * 100;
     input.style.background = `linear-gradient(to right, var(--orange) ${pct}%, var(--gray-light) ${pct}%)`;
@@ -834,7 +867,14 @@ function setLang(l) {
   set('res-low', t.q6.low); set('res-high', t.q6.high);
 
   // Q10 — Integração
-  set('tag-integ', `${t.question} 11 ${t.of} ${TOTAL}`);
+  // Q11 — Visibilidade Pipeline
+  set('tag-visib', `${t.question} 11 ${t.of} ${TOTAL}`);
+  set('lbl-visib', t.qVisib.lbl); set('hnt-visib', t.qVisib.hnt);
+  set('visib-low', t.qVisib.low); set('visib-high', t.qVisib.high);
+  document.getElementById('visib-comment').placeholder = t.qVisib.ph;
+
+  // Q12 — Integração
+  set('tag-integ', `${t.question} 12 ${t.of} ${TOTAL}`);
   set('lbl-integ', t.qInteg.lbl); set('hnt-integ', t.qInteg.hnt);
   set('integ-lbl-rapidez', t.qInteg.rapidez);
   set('integ-lbl-qual',    t.qInteg.qual);
@@ -845,13 +885,13 @@ function setLang(l) {
   });
 
   // Q11 — Checkboxes
-  set('tag-7', `${t.question} 12 ${t.of} ${TOTAL}`);
+  set('tag-7', `${t.question} 13 ${t.of} ${TOTAL}`);
   set('lbl-7', t.q7.lbl); set('hnt-7', t.q7.hnt);
   buildChecks(t.aspects);
   set('err-chks', t.errChks);
 
   // Q12 — Open
-  set('tag-8', `${t.question} 13 ${t.of} ${TOTAL}`);
+  set('tag-8', `${t.question} 14 ${t.of} ${TOTAL}`);
   set('lbl-8', t.q8.lbl); set('hnt-8', t.q8.hnt);
   document.getElementById('melhoria').placeholder = t.q8.ph;
   set('err-melhoria', t.errRequired);
@@ -898,8 +938,8 @@ function validate(s) {
   if (s === 7  && !document.querySelector('#opts-suporte .opt.sel'))    { document.getElementById('err-suporte').classList.add('show'); return false; }
   if (s === 8  && !(faceSelections.vel && faceSelections.qual && faceSelections.proat)) { document.getElementById('err-comtec').classList.add('show'); return false; }
   if (s === 9  && !document.querySelector('#opts-comunicacao .opt.sel')){ document.getElementById('err-comunicacao').classList.add('show'); return false; }
-  if (s === 12 && !document.querySelector('.chk.sel'))                  { document.getElementById('err-chks').classList.add('show'); return false; }
-  if (s === 13 && !document.getElementById('melhoria').value.trim())    { document.getElementById('err-melhoria').classList.add('show'); return false; }
+  if (s === 13 && !document.querySelector('.chk.sel'))                  { document.getElementById('err-chks').classList.add('show'); return false; }
+  if (s === 14 && !document.getElementById('melhoria').value.trim())    { document.getElementById('err-melhoria').classList.add('show'); return false; }
   return true;
 }
 
@@ -941,6 +981,8 @@ function submitForm() {
     integ_qual:    document.getElementById('integ-qual').value,
     integ_facil:   document.getElementById('integ-facil').value,
     comunicacao:  document.querySelector('#opts-comunicacao .opt.sel')?.dataset.v || '',
+    visib_pipeline: document.getElementById('visib-slider').value,
+    visib_comment:  document.getElementById('visib-comment').value.trim(),
     resultados:   document.getElementById('res-slider').value,
     aspectos:     [...document.querySelectorAll('.chk.sel .chk-text')].map(e => e.textContent),
     melhoria:     document.getElementById('melhoria').value.trim(),
