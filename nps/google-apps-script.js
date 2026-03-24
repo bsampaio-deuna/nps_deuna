@@ -35,9 +35,11 @@ const COLS = {
   integFacil:  17,
   aspectos:      18,
   melhoria:      19,
-  valorAgregado: 20,
+  valorAgregado:  20,
+  visibPipeline:  21,
+  visibComment:   22,
 };
-const TOTAL_COLS = 20;
+const TOTAL_COLS = 22;
 
 const HEADER = [
   'Data/Hora', 'Empresa', 'Nome', 'E-mail',
@@ -49,6 +51,7 @@ const HEADER = [
   'Integração — Rapidez', 'Integração — Qualidade', 'Integração — Facilidade',
   'Aspectos Valorizados', 'Sugestões de Melhoria',
   'Clareza Valor Agregado (1–10)',
+  'Visibilidade Pipeline (1–10)', 'Comentário Visibilidade',
 ];
 
 // ── Recebe respostas do formulário ──────────────────────────
@@ -90,8 +93,10 @@ function doPost(e) {
       Number(data.integ_qual)   || '',
       Number(data.integ_facil)  || '',
       (data.aspectos || []).join(', '),
-      data.melhoria           || '',
+      data.melhoria               || '',
       Number(data.valor_agregado) || '',
+      Number(data.visib_pipeline) || '',
+      data.visib_comment          || '',
     ]);
 
     buildDashboard();
@@ -188,6 +193,7 @@ function buildDashboard() {
   const iIntegFacil  = COLS.integFacil - 1;   // 16
   const iAspectos      = COLS.aspectos - 1;       // 17
   const iValorAgregado = COLS.valorAgregado - 1;  // 19
+  const iVisibPipeline = COLS.visibPipeline - 1;  // 20
 
   // Métricas NPS
   const total      = data.length;
@@ -211,6 +217,7 @@ function buildDashboard() {
   const avgIntegQual   = avg(data.map(r => Number(r[iIntegQual])));
   const avgIntegFacil    = avg(data.map(r => Number(r[iIntegFacil])));
   const avgValorAgregado = avg(data.map(r => Number(r[iValorAgregado])));
+  const avgVisibPipeline = avg(data.map(r => Number(r[iVisibPipeline])));
 
   // Carinhas comunicação técnica (good=10, neutral=5, bad=1)
   const avgComtecVel   = faceScore(data, iComtecVel);
@@ -289,7 +296,8 @@ function buildDashboard() {
   dash.setRowHeight(17, 24);
   dash.setRowHeight(18, 48);
   dash.setRowHeight(19, 28);
-  styleCard(dash, 17, 2, 'Integração — Facilidade', avgIntegFacil,    '#F0F4FF', '#3B5BDB');
+  styleCard(dash, 17, 2, 'Integração — Facilidade',  avgIntegFacil,    '#F0F4FF', '#3B5BDB');
+  styleCard(dash, 17, 3, 'Visibilidade do Pipeline', avgVisibPipeline, '#F0F4FF', '#3B5BDB');
 
   // ── Cards comunicação técnica (carinhas) ──
   dash.setRowHeight(20, 12);
@@ -351,6 +359,7 @@ function buildDashboard() {
   const sliderDims = [
     ['Resultados', avgResultados],
     ['Clareza Valor Agregado', avgValorAgregado],
+    ['Visibilidade Pipeline', avgVisibPipeline],
     ['Integração — Rapidez', avgIntegRap],
     ['Integração — Qualidade', avgIntegQual],
     ['Integração — Facilidade', avgIntegFacil],
